@@ -53,6 +53,7 @@ class DQN:
     def build_target_network(self):
         
         with tf.variable_scope('target_network'):
+            
             h1 = tf.layers.dense(self.x, 200, tf.nn.tanh,use_bias=True,
                                  kernel_initializer=tf.random_normal_initializer(),
                                  bias_initializer=tf.zeros_initializer()
@@ -121,8 +122,7 @@ class DQN:
         else:
             return np.argmax(self.session.run(self.q, feed_dict={self.x:X}))
     
-    
-    '''Set the session of the appropriate network. '''
+    '''Sets the session of the appropriate network. '''
     def set_session(self, session):
         self.session=session
     
