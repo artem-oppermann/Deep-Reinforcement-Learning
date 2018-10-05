@@ -12,10 +12,10 @@ BATCH_SIZE=64
 GAMMA=0.99
 NUM_ITER_UPDATE=25
 
-
+'''Main class for building of the Q-, and Target-Networks'''
 class DQN:
     
-    def __init__(self, scope,env,target_network):
+    def __init__(self, scope, env, target_network):
         
         self.state_size=len(env.observation_space.sample())
         self.action_size = env.action_space.n
@@ -28,7 +28,7 @@ class DQN:
                 self.q=self.build_target_network()
                 self.param = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope=scope + '/target_network')
 
-        else:
+        elif scope=='q_network':
             
             with tf.variable_scope(scope):
                 
@@ -54,8 +54,11 @@ class DQN:
             
                 with tf.name_scope('update_target_parameter'):     
                     self.update_opt=[tp.assign(lp) for tp, lp in zip(self.target_network.param,self.param)]
-                
-        
+                    
+        else:
+            raise ValueError('No network in scope %s avaiable'%scope)
+            
+    '''Build neural network for the target.'''    
     def build_target_network(self):
         
         with tf.variable_scope('target_network'):
@@ -71,6 +74,7 @@ class DQN:
         
         return q
     
+    '''Build neural network for the Q-value.''' 
     def build_q_network(self):
         
         with tf.variable_scope('q_network'):
@@ -85,23 +89,28 @@ class DQN:
         
         return q
     
+    '''Train the Q-Network.'''
     def train_q_network(self):
         
         if len(self.experience['state']) < self.min_experience:
             return
-    
+        #pick random indices from the experience memory
         idx = np.random.choice(len(self.experience['state']), size=BATCH_SIZE, replace=False)
         
+        #pick the according collected experience according to the random indices
         state=np.array([self.experience['state'][i] for i in idx]).reshape(BATCH_SIZE,self.state_size)
         action=[self.experience['action'][i] for i in idx]
         reward=[self.experience['reward'][i] for i in idx]
         next_state=np.array([self.experience['next_state'][i] for i in idx]).reshape(BATCH_SIZE,self.state_size)
         dones=[self.experience['done'][i] for i in idx]
 
+        # use the 'next state' batch and target_network to predict the Q-value
         q=self.session.run(self.target_network.q, feed_dict={self.target_network.x:next_state})
         q_next=np.max(q,axis=1)
 
+        # calculate the target values
         targets=[r+GAMMA*q if not done else r for r, q, done in zip(reward,q_next,dones)]
+        #get the indices of the actions that we picked
         indices=[[i,action[i]] for i in range(0, len(action))]
 
         feed_dict={self.x:state, 
@@ -111,7 +120,7 @@ class DQN:
         
         self.session.run(self.train_opt,feed_dict)
     
-    
+    '''Get the action by calculating the q value of an possible action by the Q-Network '''
     def get_action(self, X, eps):
         
         if np.random.random()<eps:
@@ -119,7 +128,7 @@ class DQN:
         else:
             return np.argmax(self.session.run(self.q, feed_dict={self.x:X}))
     
-    
+    '''Add experience to the memory. '''
     def addExperience(self, state, action, reward, next_state,done):
         
         if len(self.experience)>self.max_experience:
@@ -135,15 +144,16 @@ class DQN:
         self.experience['next_state'].append(next_state)
         self.experience['done'].append(done)
     
+    '''Set the session of the appropriate network. '''
     def set_session(self, session):
         self.session=session
     
-                    
+    '''Set the parameter of the target network to the parameter of the Q-network '''                
     def update_target_parameter(self):
         self.session.run(self.update_opt)
 
 
-
+'''Cart Pole environment class '''
 class CartPole:
     
     def __init__(self):
@@ -162,7 +172,8 @@ class CartPole:
         self.q_network.set_session(session)
         target_network.set_session(session)
         
-
+        
+    '''Play one single episode. '''
     def playEpisode(self,eps):
         
         state=self.env.reset()
@@ -171,7 +182,7 @@ class CartPole:
         num_iter=0
         done=False
         total_reward=0
-
+        
         while not done:
             
             action=self.q_network.get_action(state,eps)
@@ -195,7 +206,7 @@ class CartPole:
             
         return total_reward
             
-
+    '''Main loop for the running of the episodes. '''
     def run(self):
         
         totalrewards = np.empty(self.num_episodes+1)
