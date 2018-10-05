@@ -49,36 +49,42 @@ class DQN:
         else:
             raise ValueError('No network in scope %s avaiable'%scope)
             
-    '''Build neural network for the target.'''    
+            
+    '''Build neural network for the target.'''
     def build_target_network(self):
         
         with tf.variable_scope('target_network'):
+                 
+            W1=tf.get_variable('W1', shape=(4,200), initializer=tf.random_normal_initializer())
+            W2=tf.get_variable('W2', shape=(200,200), initializer=tf.random_normal_initializer())
+            W3=tf.get_variable('W3', shape=(200,2), initializer=tf.random_normal_initializer())
             
-            h1 = tf.layers.dense(self.x, 200, tf.nn.tanh,use_bias=True,
-                                 kernel_initializer=tf.random_normal_initializer(),
-                                 bias_initializer=tf.zeros_initializer()
-                                 )
-            h2 = tf.layers.dense(h1, 200, tf.nn.tanh,use_bias=True,
-                                 kernel_initializer=tf.random_normal_initializer(),
-                                 bias_initializer=tf.zeros_initializer())
-            q = tf.layers.dense(h2, 2, None,
-                                kernel_initializer=tf.random_normal_initializer()) 
-        
+            b1=tf.get_variable('b1', shape=(200), initializer=tf.zeros_initializer())
+            b2=tf.get_variable('b2', shape=(200), initializer=tf.zeros_initializer())
+            
+ 
+            h1=tf.nn.tanh(tf.matmul(self.x, W1)+b1)
+            h2=tf.nn.tanh(tf.matmul(h1, W2)+b2)
+            q=tf.matmul(h2, W3)
+            
         return q
     
-    '''Build neural network for the Q-value.''' 
+    '''Build neural network for the Q-value.'''
     def build_q_network(self):
         
         with tf.variable_scope('q_network'):
-            h1 = tf.layers.dense(self.x, 200, tf.nn.tanh,use_bias=True,
-                                 kernel_initializer=tf.random_normal_initializer(),
-                                 bias_initializer=tf.zeros_initializer())
-            h2 = tf.layers.dense(h1, 200, tf.nn.tanh,use_bias=True,
-                                 kernel_initializer=tf.random_normal_initializer(),
-                                 bias_initializer=tf.zeros_initializer())
-            q = tf.layers.dense(h2, 2, None,
-                                kernel_initializer=tf.random_normal_initializer()) 
-        
+            W1=tf.get_variable('W1', shape=(4,200), initializer=tf.random_normal_initializer())
+            W2=tf.get_variable('W2', shape=(200,200), initializer=tf.random_normal_initializer())
+            W3=tf.get_variable('W3', shape=(200,2), initializer=tf.random_normal_initializer())
+            
+            b1=tf.get_variable('b1', shape=(200), initializer=tf.zeros_initializer())
+            b2=tf.get_variable('b2', shape=(200), initializer=tf.zeros_initializer())
+            
+ 
+            h1=tf.nn.tanh(tf.matmul(self.x, W1)+b1)
+            h2=tf.nn.tanh(tf.matmul(h1, W2)+b2)
+            q=tf.matmul(h2, W3)
+              
         return q
     
     '''Train the Q-Network.'''
