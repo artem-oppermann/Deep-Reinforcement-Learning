@@ -3,7 +3,7 @@
 This repository contains several neural network models that implement several Deep Reinforcement Learning algorithms. Reinforcement learning is an area of machine learning concerned with how AI agents ought to take actions in an environment so as to maximize some notion of cumulative reward. In this particular case reinforcement learning algorithms are extended by neural networks. I use OpenAI Gym simulation environments to solve several problems. 
 
 ## Deep Q-Learning
-m
+
 Deep Q-Learning is used to teach an AI to solve the cartpole problemm
 
 
