@@ -1,11 +1,24 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Oct 30 17:55:56 2018
+
+@author: @author: Artem Oppermann
+"""
+
 import numpy as np
 import tensorflow as tf
 import gym
 from ddqn_model import DDQN
 from exp_replay import ExperienceReplay
 
-'''Cart Pole environment class '''
+
 class CartPole:
+    """
+    This class build the openAI Gym Environments and runs episodes of the environment.
+    
+    :param FLAGS: TensorFlow flags which contain the values for hyperparameters
+
+    """
     
     def __init__(self, FLAGS):
         
@@ -14,9 +27,12 @@ class CartPole:
         self.state_size = len(self.env.observation_space.sample())
         self.num_episodes=1000
         
+        # Build the experience replay class
         self.exp_replay = ExperienceReplay()
         
+        # Build the Target-Network
         target_network=DDQN(scope='target', env=self.env,target_network=None, flags=FLAGS, exp_replay=None)
+        # Build the Q-Network
         self.q_network=DDQN(scope='q_network',env=self.env,target_network=target_network, flags=FLAGS, exp_replay=self.exp_replay)
 
         init = tf.global_variables_initializer()
@@ -26,10 +42,13 @@ class CartPole:
         self.q_network.set_session(session)
         target_network.set_session(session)
         
-        
-    '''Play one single episode. '''
+          
     def playEpisode(self,eps):
+        """Play one single episode of the environmet. 
+        :param eps: value of probability epsilon
         
+        """
+        # Init and reshape first state
         state=self.env.reset()
         state=state.reshape(1,self.state_size)
         
@@ -39,8 +58,11 @@ class CartPole:
         
         while not done:
             
+            # Get an action
             action=self.q_network.get_action(state,eps)
+            
             prev_state=state
+            # Receive the next sate, reward and done
             state, reward, done, _ = self.env.step(action)
             state=state.reshape(1,self.state_size)
         
@@ -49,7 +71,7 @@ class CartPole:
             
             if done:
                 reward=-100
-
+            # Add <s,a,r,s',done> tuple to the experience replay memory
             self.exp_replay.addExperience(prev_state, action, reward, state, done)
             self.q_network.train_q_network()
             
@@ -60,8 +82,9 @@ class CartPole:
             
         return total_reward
             
-    '''Main loop for the running of the episodes. '''
+
     def run(self):
+        """ Main loop for the running of the episodes. """
         
         totalrewards = np.empty(self.num_episodes+1)
         n_steps=10

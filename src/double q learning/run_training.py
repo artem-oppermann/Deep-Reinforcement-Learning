@@ -13,7 +13,10 @@ tf.app.flags.DEFINE_integer('num_iter_update', 25,'Number of iterations after th
 FLAGS = tf.app.flags.FLAGS
 
 
+
 if __name__ == "__main__":
     
     cartPole=CartPole(FLAGS)
     cartPole.run()
+    
+    

@@ -35,7 +35,8 @@ class DQN:
                 self.param = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope=scope + '/q_network')
                 
                 with tf.name_scope('q_network_loss'):
-                    loss=tf.losses.mean_squared_error(self.target,tf.gather_nd(self.q, self.action_indices))
+                    q_values=tf.gather_nd(self.q, self.action_indices)
+                    loss=tf.losses.mean_squared_error(self.target,q_values)
             
                 with tf.name_scope('q_network_gradients'):
                     self.gradients=tf.gradients(loss, self.param)
@@ -108,9 +109,10 @@ class DQN:
         q=self.session.run(self.target_network.q, feed_dict={self.target_network.x:next_state})
         q_next=np.max(q,axis=1)
 
-        # calculate the target values
+        # calculate the target values according to the greedy policy
         targets=[r+self.FLAGS.gamma*q if not done else r for r, q, done in zip(reward,q_next,dones)]
-        #get the indices of the actions that we picked
+        
+        #get the indices of the actions that were selected by the behaviour policy
         indices=[[i,action[i]] for i in range(0, len(action))]
 
         feed_dict={self.x:state, 

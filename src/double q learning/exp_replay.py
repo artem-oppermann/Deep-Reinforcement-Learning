@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Oct  5 15:22:48 2018
+A simple representation of a human being.
 
-@author: Admin
+:param name: A string, the person's name.
+:param age: An int, the person's age.
+
+
+@author: Artem Oppermann
 """
 
 class ExperienceReplay:
@@ -22,8 +26,15 @@ class ExperienceReplay:
     def get_max_experience_count(self):
         return self.__max_experience
     
-    '''Add experience to the memory. '''
     def addExperience(self, state, action, reward, next_state,done):
+        """Add experience to the memory. 
+        
+        :param state: current state s, given by the environment
+        :param action: action taken in state s
+        :param reward: reward received for action a in state s
+        :param next_state: state after current state
+        :param done: value of probability epsilon
+        """
         
         if len(self.__experience)>self.__max_experience:
             self.__experience['state'].pop(0)
