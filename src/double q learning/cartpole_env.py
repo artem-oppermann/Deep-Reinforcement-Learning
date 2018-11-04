@@ -66,6 +66,7 @@ class CartPole:
             state, reward, done, _ = self.env.step(action)
             state=state.reshape(1,self.state_size)
         
+            ############# Uncomment this line if you want to render the environment###########
             #self.env.render(mode='rgb_array')
             total_reward=total_reward+reward
             
