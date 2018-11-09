@@ -38,4 +38,4 @@ To run the model execute `src/policy gradients/pendulum_pg.py`.
 
 | Title  | Genre   | Actor  |  ... |
 |---|---|---|---|
-|   |   |   |   |
+| .  | .  |  . |  . |
