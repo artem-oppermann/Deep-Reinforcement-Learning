@@ -33,3 +33,9 @@ To run the model execute `src/policy gradients/pendulum_pg.py`.
 #### AI agent after training:
 
 ![alt text](https://github.com/artem-oppermann/Deep-Reinforcement-Learning/blob/master/gif%20samples/pendulum_after.gif)
+
+
+
+| Title  | Genre   | Actor  |  ... |
+|---|---|---|---|
+|   |   |   |   |
