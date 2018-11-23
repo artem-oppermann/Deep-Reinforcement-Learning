@@ -27,9 +27,11 @@ An other approach to solve an environment is using policy gradients. This method
 To run the model execute `src/policy gradients/pendulum_pg.py`. 
 
 
+<img src="https://github.com/artem-oppermann/Deep-Reinforcement-Learning/blob/master/gif%20samples/pendulum_before.gif">
+
 #### AI agent before training:
 
-![alt text](https://github.com/artem-oppermann/Deep-Reinforcement-Learning/blob/master/gif%20samples/pendulum_before.gif | width=100)
+![alt text](https://github.com/artem-oppermann/Deep-Reinforcement-Learning/blob/master/gif%20samples/pendulum_before.gif )
 
 #### AI agent after training:
 
