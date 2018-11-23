@@ -10,6 +10,8 @@ Reinforcement learning is an area of machine learning concerned with how AI agen
 
 Deep Q-Learning applied on the OpenAI's Gym CartPole Problem.
 
+The theory behind Deep Q-Learning / Double Q-Learning can be found in my articles on towardsdatascience.com: 
+
 https://towardsdatascience.com/self-learning-ai-agents-part-ii-deep-q-learning-b5ac60c3f47
 https://towardsdatascience.com/deep-double-q-learning-7fca410b193a
 
