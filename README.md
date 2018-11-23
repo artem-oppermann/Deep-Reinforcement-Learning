@@ -4,7 +4,7 @@
 
 ### Reinforcement learning is an area of machine learning concerned with how AI agents ought to take actions in an environment so as to maximize some notion of cumulative reward. In deep reinforcement learning these algorithms are extended by deep neural networks. 
 
-# I use deep reinforcement learning to solve solve several (classical control) problems, taken from the OpenAI Gym simulation environments. 
+### I use deep reinforcement learning to solve solve several (classical control) problems, taken from the OpenAI Gym simulation environments. 
 
 ## Deep Q-Learning / Double Q-Learning
 
