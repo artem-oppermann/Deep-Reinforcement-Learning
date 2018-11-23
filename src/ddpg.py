@@ -59,6 +59,7 @@ class Actor:
             self.state = tf.placeholder(tf.float32, [None,3], "state")
             self.action = self._action_estimator(scope)
             self.param = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope=scope + '/action')
+            
         elif scope=='normal':
             self.target_network=target_network
             self.state = tf.placeholder(tf.float32, [None,3], "state")    
@@ -79,12 +80,23 @@ class Actor:
             self.train_op=tf.train.AdamOptimizer(self.FLAGS.learning_rate_Actor).apply_gradients(zip(policy_gradient,param))  
         
     def _action_estimator(self, scope):
+
         
         with tf.variable_scope('action'):
-            W1=tf.get_variable('%sW_1_a'%scope, shape=(3,1), initializer=tf.zeros_initializer)
-            a=tf.nn.sigmoid(tf.matmul(self.state, W1))
+            
+            W1=tf.get_variable('%s_W1_state_value'%scope, shape=(4,8), initializer=tf.random_normal_initializer)
+            W2=tf.get_variable('%s_W2_state_value'%scope, shape=(8,8), initializer=tf.random_normal_initializer)
+            W3=tf.get_variable('%s_W3_state_value'%scope, shape=(8,8), initializer=tf.random_normal_initializer)
+            W4=tf.get_variable('%s_W4_state_value'%scope, shape=(8,1), initializer=tf.random_normal_initializer)
+            
+            h1=tf.nn.relu(tf.matmul(self.state, W1))
+            h2=tf.nn.relu(tf.matmul(h1, W2))
+            h3=tf.nn.relu(tf.matmul(h2, W3))
+            
+            a=tf.nn.sigmoid(tf.matmul(h3, W4))
             a = tf.squeeze(a)
             scalled_actions = self.mountainCarEnv.action_space.low + a*(self.mountainCarEnv.action_space.high - self.mountainCarEnv.action_space.low)
+            
         return scalled_actions  
         
            
@@ -151,11 +163,22 @@ class Critic:
         state_action = tf.concat([self.state, self.action], axis=1)
 
         with tf.name_scope(scope+'/action_value'):
-            W=tf.get_variable('%s_W_state_value'%scope, shape=(4,1), initializer=tf.zeros_initializer)
-            action_value=tf.matmul(state_action, W)
-            action_value=tf.squeeze(action_value)         
+            
+            W1=tf.get_variable('%s_W1_state_value'%scope, shape=(4,8), initializer=tf.random_normal_initializer)
+            W2=tf.get_variable('%s_W2_state_value'%scope, shape=(8,8), initializer=tf.random_normal_initializer)
+            W3=tf.get_variable('%s_W3_state_value'%scope, shape=(8,8), initializer=tf.random_normal_initializer)
+            W4=tf.get_variable('%s_W4_state_value'%scope, shape=(8,1), initializer=tf.random_normal_initializer)
+            
+            h1=tf.nn.relu(tf.matmul(state_action, W1))
+            h2=tf.nn.relu(tf.matmul(h1, W2))
+            h3=tf.nn.relu(tf.matmul(h2, W3))
+            
+            action_value=tf.matmul(h3, W4)
+            
+            action_value=tf.squeeze(action_value)      
+            
         return action_value
-    
+        
     
     def get_gradients(self, state, action):
         #state = self.env.featurize_state(state)

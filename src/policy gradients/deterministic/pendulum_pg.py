@@ -5,7 +5,7 @@ import imageio
 
 BATCH_SIZE=64
 LEARNING_RATE_C=1e-3
-LEARNING_RATE_A=1e-3
+LEARNING_RATE_A=1e-4
 
 
 class ExperienceReplay:
@@ -54,7 +54,7 @@ class PolicyNetwork:
         
         self.env=env
         self.state_size = len(self.env.observation_space.sample())
-        self.tau=1e-2
+        self.tau=1e-3
         
         if scope=='target':
             
@@ -101,19 +101,16 @@ class PolicyNetwork:
         
         with tf.variable_scope('policy_target_network'):
             
-            h1 = tf.layers.dense(self.x, 8, tf.nn.relu,use_bias=None,
+            h1 = tf.layers.dense(self.x, 100, tf.nn.relu,use_bias=None,
                                  kernel_initializer=tf.random_normal_initializer(),
                                  bias_initializer=tf.zeros_initializer()
                                  )
-            h2 = tf.layers.dense(h1, 8, tf.nn.relu,use_bias=None,
+            h2 = tf.layers.dense(h1, 100, tf.nn.relu,use_bias=None,
                                  kernel_initializer=tf.random_normal_initializer(),
                                  bias_initializer=tf.zeros_initializer())
             
-            h3 = tf.layers.dense(h2, 8, tf.nn.relu,use_bias=None,
-                                 kernel_initializer=tf.random_normal_initializer(),
-                                 bias_initializer=tf.zeros_initializer())
-            
-            actions = tf.layers.dense(h3, 1, None, kernel_initializer=tf.random_normal_initializer())  
+        
+            actions = tf.layers.dense(h2, 1, None, kernel_initializer=tf.random_normal_initializer())  
             
             scalled_actions = self.env.action_space.low + tf.nn.sigmoid(actions)*(self.env.action_space.high - self.env.action_space.low)
             
@@ -122,19 +119,17 @@ class PolicyNetwork:
     def build_policy_network(self):
         
         with tf.variable_scope('policy_network'):
-            h1 = tf.layers.dense(self.x, 8, tf.nn.relu,use_bias=None,
+            h1 = tf.layers.dense(self.x, 100, tf.nn.relu,use_bias=None,
                                  kernel_initializer=tf.random_normal_initializer(),
                                  bias_initializer=tf.zeros_initializer()
                                  )
-            h2 = tf.layers.dense(h1, 8, tf.nn.relu,use_bias=None,
+            h2 = tf.layers.dense(h1, 100, tf.nn.relu,use_bias=None,
                                  kernel_initializer=tf.random_normal_initializer(),
                                  bias_initializer=tf.zeros_initializer())
             
-            h3 = tf.layers.dense(h2, 8, tf.nn.relu,use_bias=None,
-                                 kernel_initializer=tf.random_normal_initializer(),
-                                 bias_initializer=tf.zeros_initializer())
+        
             
-            actions = tf.layers.dense(h3, 1, None,
+            actions = tf.layers.dense(h2, 1, None,
                                 kernel_initializer=tf.random_normal_initializer())  
             scalled_actions = self.env.action_space.low + tf.nn.sigmoid(actions)*(self.env.action_space.high - self.env.action_space.low)
     
@@ -200,18 +195,15 @@ class QNetwork:
         
         with tf.variable_scope('q_target_network'):
             
-            h1 = tf.layers.dense(state_action, 8, tf.nn.relu,use_bias=None,
+            h1 = tf.layers.dense(state_action, 100, tf.nn.relu,use_bias=None,
                                  kernel_initializer=tf.random_normal_initializer(),
                                  bias_initializer=tf.zeros_initializer()
                                  )
-            h2 = tf.layers.dense(h1, 8, tf.nn.relu,use_bias=None,
+            h2 = tf.layers.dense(h1, 100, tf.nn.relu,use_bias=None,
                                  kernel_initializer=tf.random_normal_initializer(),
                                  bias_initializer=tf.zeros_initializer())
             
-            h3 = tf.layers.dense(h2, 8, tf.nn.relu,use_bias=None,
-                                 kernel_initializer=tf.random_normal_initializer(),
-                                 bias_initializer=tf.zeros_initializer())
-            q= tf.layers.dense(h3, 1, None,
+            q= tf.layers.dense(h2, 1, None,
                                 kernel_initializer=tf.random_normal_initializer())                     
         return q
     
@@ -221,18 +213,15 @@ class QNetwork:
         
         with tf.variable_scope('q_network'):
             
-            h1 = tf.layers.dense(state_action, 8, tf.nn.relu,use_bias=None,
+            h1 = tf.layers.dense(state_action, 100, tf.nn.relu,use_bias=None,
                                  kernel_initializer=tf.random_normal_initializer(),
                                  bias_initializer=tf.zeros_initializer()
                                  )
-            h2 = tf.layers.dense(h1, 8, tf.nn.relu,use_bias=None,
+            h2 = tf.layers.dense(h1, 100, tf.nn.relu,use_bias=None,
                                  kernel_initializer=tf.random_normal_initializer(),
                                  bias_initializer=tf.zeros_initializer())
             
-            h3 = tf.layers.dense(h2, 8, tf.nn.relu,use_bias=None,
-                                 kernel_initializer=tf.random_normal_initializer(),
-                                 bias_initializer=tf.zeros_initializer())
-            q= tf.layers.dense(h3, 1, None,
+            q= tf.layers.dense(h2, 1, None,
                                 kernel_initializer=tf.random_normal_initializer())                     
         return q
     
