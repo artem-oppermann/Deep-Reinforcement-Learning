@@ -26,14 +26,10 @@ An other approach to solve an environment is using policy gradients. This method
 
 To run the model execute `src/policy gradients/pendulum_pg.py`. 
 
-AI agent before training:            |  AI agent after training:
-:-------------------------:|:-------------------------:
-![alt text](https://github.com/artem-oppermann/Deep-Reinforcement-Learning/blob/master/gif%20samples/pendulum_before.gif)
-  |  ![alt text](https://github.com/artem-oppermann/Deep-Reinforcement-Learning/blob/master/gif%20samples/pendulum_after.gif)
 
 #### AI agent before training:
 
-![alt text](https://github.com/artem-oppermann/Deep-Reinforcement-Learning/blob/master/gif%20samples/pendulum_before.gif)
+![alt text](https://github.com/artem-oppermann/Deep-Reinforcement-Learning/blob/master/gif%20samples/pendulum_before.gif =250x250)
 
 #### AI agent after training:
 
