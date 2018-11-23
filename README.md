@@ -6,7 +6,7 @@
 
 ### I use deep reinforcement learning to solve solve several (classical control) problems, taken from the OpenAI Gym simulation environments. 
 
-## Deep Q-Learning / Double Q-Learning
+## 1. Deep Q-Learning / Double Q-Learning
 
 Deep Q-Learning applied on the OpenAI's Gym CartPole Problem
 
@@ -25,7 +25,7 @@ To run the model execute `src/q learning/run_training.py`. for vanilla Q-Learnin
 </p>
 
 
-## Stochastic Policy Gradients
+## 2. Stochastic Policy Gradients
 
 
 > **Problem Discription**: An underpowered car must climb a one-dimensional hill to reach a target. Unlike MountainCar v0, the action (engine force applied) is allowed to be a continuous value. The target is on top of a hill on the right-hand side of the car. If the car reaches it or goes beyond, the episode terminates. On the left-hand side, there is another hill. Climbing this hill can be used to gain potential energy and accelerate towards the target. On top of this second hill, the car cannot go further than a position equal to -1, as if there was a wall. Hitting this limit does not generate a penalty (it might in a more challenging version).
@@ -36,10 +36,8 @@ To run the model execute `src/policy gradients/stochastic/stochastic_pg.py`.
 <img src="https://github.com/artem-oppermann/Deep-Reinforcement-Learning/blob/master/gif%20samples/mountain_car_14.gif" width="430">
 
 
-## Deterministic Policy Gradient
+## 3. Deterministic Policy Gradient
 
-
-An other approach to solve an environment is using policy gradients. This method is usefull in continues action spaces, where the AI must decide from an infinite number of possible actions. An example for such a problem is the OpenAI's pendulum.
 
 > **Problem Discription**: The inverted pendulum swingup problem is a classic problem in the control literature. In this version of the problem, the pendulum starts in a random position, and the goal is to swing it up so it stays upright. The AI agents becomes an observation state and must decide to apply a force which is continues and is between -2 and +2.
 
