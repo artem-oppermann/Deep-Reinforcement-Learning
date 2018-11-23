@@ -12,14 +12,12 @@ Deep Q-Learning is used to teach an AI to solve the cartpole problem
 To run the model execute `src/q learning/run_training.py`. for vanilla Q-Learning implementation and `src/double q learning/run_training.py` if you want to try out the more advanced Double Q-Learning version.
 
 
-AI agent before training:            |  AI agent after training:
-:-------------------------:|:-------------------------:
-![alt text](https://github.com/artem-oppermann/Deep-Reinforcement-Learning/blob/master/gif%20samples/cartpole_before.gif)  |  ![alt text](https://github.com/artem-oppermann/Deep-Reinforcement-Learning/blob/master/gif%20samples/cartpole_after4.gif)
+### AI agent before and after training with Deep (Double) Q-Learning algorithm
 
 
 <p float="left">
-  <img src="https://github.com/artem-oppermann/Deep-Reinforcement-Learning/blob/master/gif%20samples/cartpole_before.gif" width="450">
-  <img src="https://github.com/artem-oppermann/Deep-Reinforcement-Learning/blob/master/gif%20samples/cartpole_after4.gif" width="450">
+  <img src="https://github.com/artem-oppermann/Deep-Reinforcement-Learning/blob/master/gif%20samples/cartpole_before.gif" width="430">
+  <img src="https://github.com/artem-oppermann/Deep-Reinforcement-Learning/blob/master/gif%20samples/cartpole_after4.gif" width="430">
 </p>
 
 
