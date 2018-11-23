@@ -17,13 +17,6 @@ AI agent before training:            |  AI agent after training:
 ![alt text](https://github.com/artem-oppermann/Deep-Reinforcement-Learning/blob/master/gif%20samples/cartpole_before.gif)  |  ![alt text](https://github.com/artem-oppermann/Deep-Reinforcement-Learning/blob/master/gif%20samples/cartpole_after4.gif)
 
 
-#### AI agent before training:
-![alt text](https://github.com/artem-oppermann/Deep-Reinforcement-Learning/blob/master/gif%20samples/cartpole_before.gif) 
-
-#### AI agent after training:
-
-![alt text](https://github.com/artem-oppermann/Deep-Reinforcement-Learning/blob/master/gif%20samples/cartpole_after4.gif)
-
 
 ## Policy Gradients
 
@@ -32,6 +25,12 @@ An other approach to solve an environment is using policy gradients. This method
 > **Problem Discription**: The inverted pendulum swingup problem is a classic problem in the control literature. In this version of the problem, the pendulum starts in a random position, and the goal is to swing it up so it stays upright. The AI agents becomes an observation state and must decide to apply a force which is continues and is between -2 and +2.
 
 To run the model execute `src/policy gradients/pendulum_pg.py`. 
+
+AI agent before training:            |  AI agent after training:
+:-------------------------:|:-------------------------:
+![alt text](https://github.com/artem-oppermann/Deep-Reinforcement-Learning/blob/master/gif%20samples/pendulum_before.gif)
+  |  ![alt text](https://github.com/artem-oppermann/Deep-Reinforcement-Learning/blob/master/gif%20samples/pendulum_after.gif)
+
 #### AI agent before training:
 
 ![alt text](https://github.com/artem-oppermann/Deep-Reinforcement-Learning/blob/master/gif%20samples/pendulum_before.gif)
