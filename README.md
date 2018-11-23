@@ -18,8 +18,8 @@ AI agent before training:            |  AI agent after training:
 
 
 <p float="left">
-  <img src="https://github.com/artem-oppermann/Deep-Reinforcement-Learning/blob/master/gif%20samples/cartpole_before.gif" width="380">
-  <img src="https://github.com/artem-oppermann/Deep-Reinforcement-Learning/blob/master/gif%20samples/cartpole_after4.gif" width="380">
+  <img src="https://github.com/artem-oppermann/Deep-Reinforcement-Learning/blob/master/gif%20samples/cartpole_before.gif" width="420">
+  <img src="https://github.com/artem-oppermann/Deep-Reinforcement-Learning/blob/master/gif%20samples/cartpole_after4.gif" width="420">
 </p>
 
 
