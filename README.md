@@ -1,10 +1,10 @@
 # Deep-Reinforcement-Learning
 
-#### This repository contains several deep neural network models that implement different deep reinforcement learning algorithms. 
+### This repository contains several deep neural network models that implement different deep reinforcement learning algorithms. 
 
-#### Reinforcement learning is an area of machine learning concerned with how AI agents ought to take actions in an environment so as to maximize some notion of cumulative reward. In deep reinforcement learning these algorithms are extended by deep neural networks. 
+Reinforcement learning is an area of machine learning concerned with how AI agents ought to take actions in an environment so as to maximize some notion of cumulative reward. In deep reinforcement learning these algorithms are extended by deep neural networks. 
 
-#### I use deep reinforcement learning to solve solve several (classical control) problems, taken from the OpenAI Gym simulation environments. 
+I use deep reinforcement learning to solve solve several (classical control) problems, taken from the OpenAI Gym simulation environments. 
 
 ## 1. Deep Q-Learning / Double Q-Learning
 
@@ -19,8 +19,6 @@ https://towardsdatascience.com/self-learning-ai-agents-part-ii-deep-q-learning-b
 https://towardsdatascience.com/deep-double-q-learning-7fca410b193a
 
 To run the model execute `src/q learning/run_training.py`. for vanilla Q-Learning implementation and `src/double q learning/run_training.py` if you want to try out the more advanced Double Q-Learning version.
-
-
 
 
 ### AI agent before and after training with Deep (Double) Q-Learning algorithm
