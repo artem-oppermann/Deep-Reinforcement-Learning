@@ -2,13 +2,16 @@
 
 ### This repository contains several deep neural network models that implement different deep reinforcement learning algorithms. 
 
-### Reinforcement learning is an area of machine learning concerned with how AI agents ought to take actions in an environment so as to maximize some notion of cumulative reward. In deep reinforcement learning these algorithms are extended by deep neural networks. 
+Reinforcement learning is an area of machine learning concerned with how AI agents ought to take actions in an environment so as to maximize some notion of cumulative reward. In deep reinforcement learning these algorithms are extended by deep neural networks. 
 
-### I use deep reinforcement learning to solve solve several (classical control) problems, taken from the OpenAI Gym simulation environments. 
+ I use deep reinforcement learning to solve solve several (classical control) problems, taken from the OpenAI Gym simulation environments. 
 
 ## 1. Deep Q-Learning / Double Q-Learning
 
-Deep Q-Learning applied on the OpenAI's Gym CartPole Problem
+Deep Q-Learning applied on the OpenAI's Gym CartPole Problem.
+
+https://towardsdatascience.com/self-learning-ai-agents-part-ii-deep-q-learning-b5ac60c3f47
+https://towardsdatascience.com/deep-double-q-learning-7fca410b193a
 
 
 > **Problem Discription**: A pole is attached by an un-actuated joint to a cart, which moves along a frictionless track. The system is controlled by applying a force of +1 or -1 to the cart. The pendulum starts upright, and the goal is to prevent it from falling over. A reward of +1 is provided for every timestep that the pole remains upright. The episode ends when the pole is more than 15 degrees from vertical, or the cart moves more than 2.4 units from the center.
