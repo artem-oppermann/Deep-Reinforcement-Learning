@@ -1,10 +1,10 @@
 # Deep-Reinforcement-Learning
 
-This repository contains several neural network models that implement several Deep Reinforcement Learning algorithms. Reinforcement learning is an area of machine learning concerned with how AI agents ought to take actions in an environment so as to maximize some notion of cumulative reward. In this particular case reinforcement learning algorithms are extended by neural networks. I use OpenAI Gym simulation environments to solve several problems. 
+This repository contains neural network models that implement several Deep Reinforcement Learning algorithms. Reinforcement learning is an area of machine learning concerned with how AI agents ought to take actions in an environment so as to maximize some notion of cumulative reward. In this particular case reinforcement learning algorithms are extended by neural networks. I use OpenAI Gym simulation environments to solve several problems. 
 
 ## Deep Q-Learning / Double Q-Learning
 
-Deep Q-Learning is used to teach an AI to solve the cartpole problem
+Deep Q-Learning applied on the OpenAI's Gym CartPole Problem
 
 
 > **Problem Discription**: A pole is attached by an un-actuated joint to a cart, which moves along a frictionless track. The system is controlled by applying a force of +1 or -1 to the cart. The pendulum starts upright, and the goal is to prevent it from falling over. A reward of +1 is provided for every timestep that the pole remains upright. The episode ends when the pole is more than 15 degrees from vertical, or the cart moves more than 2.4 units from the center.
@@ -21,7 +21,13 @@ To run the model execute `src/q learning/run_training.py`. for vanilla Q-Learnin
 </p>
 
 
-## Policy Gradients
+## Stochastic Policy Gradients
+
+
+### AI agent after training with stochastic policy gradient algorithm:
+
+
+## Deterministic Policy Gradient
 
 An other approach to solve an environment is using policy gradients. This method is usefull in continues action spaces, where the AI must decide from an infinite number of possible actions. An example for such a problem is the OpenAI's pendulum.
 
@@ -30,13 +36,17 @@ An other approach to solve an environment is using policy gradients. This method
 To run the model execute `src/policy gradients/pendulum_pg.py`. 
 
 
-<img src="https://github.com/artem-oppermann/Deep-Reinforcement-Learning/blob/master/gif%20samples/pendulum_before.gif">
 
-#### AI agent before training:
+### AI agent after training with deterministic policy gradient algorithm:
 
+
+<p float="left">
+  <img src="https://github.com/artem-oppermann/Deep-Reinforcement-Learning/blob/master/gif%20samples/pendulum_before.gif" width="430">
+  <img src="https://github.com/artem-oppermann/Deep-Reinforcement-Learning/blob/master/gif%20samples/pendulum_after.gif" width="430">
+</p>
 ![alt text](https://github.com/artem-oppermann/Deep-Reinforcement-Learning/blob/master/gif%20samples/pendulum_before.gif )
 
-#### AI agent after training:
+
 
 ![alt text](https://github.com/artem-oppermann/Deep-Reinforcement-Learning/blob/master/gif%20samples/pendulum_after.gif)
 
