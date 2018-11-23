@@ -26,9 +26,10 @@ To run the model execute `src/q learning/run_training.py`. for vanilla Q-Learnin
 
 ### AI agent after training with stochastic policy gradient algorithm:
 
+<img src="https://github.com/artem-oppermann/Deep-Reinforcement-Learning/blob/master/gif%20samples/mountain_car_14.gif" width="430">
+
 
 ## Deterministic Policy Gradient
-
 
 
 An other approach to solve an environment is using policy gradients. This method is usefull in continues action spaces, where the AI must decide from an infinite number of possible actions. An example for such a problem is the OpenAI's pendulum.
