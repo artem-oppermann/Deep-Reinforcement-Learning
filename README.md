@@ -46,7 +46,7 @@ To run the model execute `src/policy gradients/stochastic/stochastic_pg.py`.
 
 > **Problem Discription**: The inverted pendulum swingup problem is a classic problem in the control literature. In this version of the problem, the pendulum starts in a random position, and the goal is to swing it up so it stays upright. The AI agents becomes an observation state and must decide to apply a force which is continues and is between -2 and +2.
 
-To run the model execute `src/policy gradients/deterministic/pendulum_pg.py`. 
+To run the model execute `src/policy gradients/deterministic/ddpg.py`. 
 
 
 ### AI agent before and after training with deterministic policy gradient algorithm:
