@@ -2,8 +2,9 @@
 """
 Created on Mon Dec 10 19:12:05 2018
 
-@author: Admin
+@author: @author: Artem Oppermann
 """
+import numpy as np
 
 class ExperienceReplay:
     

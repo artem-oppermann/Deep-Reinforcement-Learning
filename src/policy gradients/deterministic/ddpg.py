@@ -2,14 +2,13 @@
 """
 Created on Mon Dec 10 19:12:05 2018
 
-@author: Admin
+@author: @author: Artem Oppermann
 """
 
 
 import numpy as np
 import tensorflow as tf
 import gym
-import imageio
 from experience_replay import ExperienceReplay
 from noise import OrnsteinUhlenbeckActionNoise
 
@@ -17,6 +16,17 @@ class Actor:
     
     
     def __init__(self, scope, target_network,env, flags):
+        
+        """
+        This class implements the actor for the deterministic policy gradients model.
+        The actor class determines the action that the agent must take in a environment.
+    
+        :param scope: within this scope the parameters will be defined
+        :param target_network: instance of the Actor(target-network class)
+        :param env: instance of the openAI environment
+        :param FLAGS: TensorFlow flags which contain thevalues for hyperparameters
+    
+        """
         
         self.FLAGS=flags
         self.env=env
@@ -27,71 +37,75 @@ class Actor:
             with tf.variable_scope(scope):
                 
                 self.x=tf.placeholder(tf.float32, shape=(None,self.state_size), name='state')
-                self.action=self.action_estimator(scope='policy_target_network')
-                self.param = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope=scope + '/policy_target_network')
-        else:
+                self.action=self.action_estimator()
+                self.param = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope=scope)
+                
+        elif scope=='actor':
             
             with tf.variable_scope(scope):
                 
+                self.x=tf.placeholder(tf.float32, shape=(None,self.state_size), name='state')
                 self.target_network=target_network
             
-                self.x=tf.placeholder(tf.float32, shape=(None,self.state_size), name='state')
                 self.q_network_gradient=tf.placeholder(tf.float32, shape=(None,1), name='q_network_gradients')
+                self.action=self.action_estimator()
                 
-                self.action=self.action_estimator(scope='policy_network')
-                
-                self.param = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope=scope + '/policy_network')
+                self.param = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope=scope)
                    
-                with tf.name_scope('policy_gradient'):
+                with tf.name_scope('policy_gradients'):
                     self.unnormalized_gradients = tf.gradients(self.action, self.param, -self.q_network_gradient)
                     self.policy_gradient=list(map(lambda x: tf.div(x, self.FLAGS.batch_size), self.unnormalized_gradients))
             
                 with tf.name_scope('train_policy_network'):
                     self.train_opt=tf.train.AdamOptimizer(self.FLAGS.learning_rate_Actor).apply_gradients(zip(self.policy_gradient,self.param))    
                 
-                with tf.name_scope('update_policy_target'):     
+                with tf.name_scope('update_actor_target'):     
                     self.update_opt=[tp.assign(tf.multiply(self.FLAGS.tau,lp)+tf.multiply(1-self.FLAGS.tau,tp)) for tp, lp in zip(self.target_network.param,self.param)]
                           
-                with tf.name_scope('initialize_policy_target_network'):
+                with tf.name_scope('initialize_actor_target_network'):
                      self.init_target_op=[tp.assign(lp) for tp, lp in zip(self.target_network.param,self.param)]
                     
-    def action_estimator(self, scope):
+    def action_estimator(self):
+        '''Build the neural network that estimates the action for a given state '''
         
-        with tf.variable_scope(scope):
-            
-            h1 = tf.layers.dense(self.x, 8, tf.nn.relu,use_bias=None,
-                                 kernel_initializer=tf.random_normal_initializer(),
-                                 bias_initializer=tf.zeros_initializer()
-                                 )
-            h2 = tf.layers.dense(h1, 8, tf.nn.relu,use_bias=None,
-                                 kernel_initializer=tf.random_normal_initializer(),
-                                 bias_initializer=tf.zeros_initializer())
-            
-            h3 = tf.layers.dense(h2, 8, tf.nn.relu,use_bias=None,
-                                 kernel_initializer=tf.random_normal_initializer(),
-                                 bias_initializer=tf.zeros_initializer())
-            
-            actions = tf.layers.dense(h3, 1, None, kernel_initializer=tf.random_normal_initializer())  
-            
-            scalled_actions = self.env.action_space.low + tf.nn.sigmoid(actions)*(self.env.action_space.high - self.env.action_space.low)
+        h1 = tf.layers.dense(self.x, 8, tf.nn.relu,use_bias=None,
+                             kernel_initializer=tf.random_normal_initializer(),
+                             bias_initializer=tf.zeros_initializer()
+                             )
+        h2 = tf.layers.dense(h1, 8, tf.nn.relu,use_bias=None,
+                             kernel_initializer=tf.random_normal_initializer(),
+                             bias_initializer=tf.zeros_initializer())
+        
+        h3 = tf.layers.dense(h2, 8, tf.nn.relu,use_bias=None,
+                             kernel_initializer=tf.random_normal_initializer(),
+                             bias_initializer=tf.zeros_initializer())
+        
+        actions = tf.layers.dense(h3, 1, None, kernel_initializer=tf.random_normal_initializer())  
+        
+        scalled_actions = self.env.action_space.low + tf.nn.sigmoid(actions)*(self.env.action_space.high - self.env.action_space.low)
             
         return scalled_actions
     
 
 
     def set_session(self, session):
+        '''Set the session '''
         self.session=session
     
     def init_target_network(self):
+        '''Initialize the parameters of the target-network '''
         self.session.run(self.init_target_op)
 
     def update_target_parameter(self):
+         '''Update the parameters of the target-network '''
          self.session.run(self.update_opt)
         
     def get_action(self, x):
+        '''Get an action for a certain state '''
         return self.session.run(self.action, feed_dict={self.x:x})
 
     def train(self, state, q_gradient):
+        '''Train the actor network '''
         
         feed_dict={self.q_network_gradient: q_gradient,
                    self.x:state
@@ -102,6 +116,17 @@ class Actor:
 class Critic:
     
     def __init__(self, scope,target_network,env, flags):
+        """
+        This class implements the Critic for the stochastic policy gradient model.
+        The critic provides a state-value for the current state environment where 
+        the agent operates.
+        
+        :param scope: within this scope the parameters will be defined
+        :param target_network: instance of the Actor(target-network class)
+        :param env: instance of the openAI environment
+        :param FLAGS: TensorFlow flags which contain thevalues for hyperparameters
+        
+        """
         
         self.state_size=len(env.observation_space.sample())
         self.FLAGS=flags
@@ -147,6 +172,7 @@ class Critic:
                      self.init_target_op=[tp.assign(lp) for tp, lp in zip(self.target_network.param,self.param)]
  
     def action_value_estimator(self, scope):    
+        '''Build the neural network that estimates the action-values '''
         
         state_action = tf.concat([self.x, self.actions], axis=1)
         
@@ -169,6 +195,7 @@ class Critic:
     
     
     def compute_gradients(self, state, actions):
+        '''Compute the gradients of the action_value estimator neural network '''
         
         feed_dict={self.x:state, 
                    self.actions:actions
@@ -181,7 +208,8 @@ class Critic:
     
     
     def calculate_Q(self, state, actions):
-        
+        '''Compute the action-value '''
+
         feed_dict={self.x: state,
                    self.actions:actions}
         
@@ -191,6 +219,7 @@ class Critic:
     
     
     def train(self, state, targets, action):
+        '''Train the actor network '''
         
         feed_dict={self.x:state, 
                    self.target:targets, 
@@ -200,20 +229,30 @@ class Critic:
     
     
     def set_session(self, session):
+        '''Set the session '''
         self.session=session
     
     
     def init_target_network(self):
+       '''Initialize the parameters of the target-network '''
        self.session.run(self.init_target_op)
              
        
     def update_target_parameter(self):
+        '''Update the parameters of the target-network '''
         self.session.run(self.update_opt)
     
 
 class Model:
     
     def __init__(self, FLAGS):
+        """
+        This class build the model that implements the deterministic 
+        gradient descent algorithm.
+        
+        :param FLAGS: TensorFlow flags which contain the values for hyperparameters
+        
+        """
         
         self.FLAGS=FLAGS
         
@@ -227,10 +266,10 @@ class Model:
         self.action_noise=OrnsteinUhlenbeckActionNoise(self.env,mu= 0.0, sigma=0.2, theta=.15, dt=1e-2, x0=None)
         
         self.actor_target=Actor(scope='target',target_network=None,env=self.env, flags=FLAGS)
-        self.actor=Actor(scope='policy',target_network=self.actor_target,env=self.env, flags=FLAGS)
+        self.actor=Actor(scope='actor',target_network=self.actor_target,env=self.env, flags=FLAGS)
         
         self.critic_target=Critic(scope='target',target_network=None,env=self.env, flags=FLAGS)
-        self.critic=Critic(scope='q',target_network=self.critic_target,env=self.env, flags=FLAGS)
+        self.critic=Critic(scope='critic',target_network=self.critic_target,env=self.env, flags=FLAGS)
         
         init = tf.global_variables_initializer()
         self.session = tf.InteractiveSession()
@@ -246,11 +285,12 @@ class Model:
         
     
     def train_networks(self):
+        '''Training of the actor and critic networks '''
         
         if len(self.exp_replay.experience['state']) < self.exp_replay.min_experience:
             return
     
-    
+        # pick random experience tupels from the expererience replay
         idx = np.random.choice(len(self.exp_replay.experience['state']), size=self.FLAGS.batch_size, replace=False)
         
         state=np.array([self.exp_replay.experience['state'][i] for i in idx]).reshape(self.FLAGS.batch_size,self.state_size)
@@ -262,7 +302,7 @@ class Model:
         #Train critic network
         next_actions=self.actor_target.get_action(next_state)
         q_next=self.critic.target_network.calculate_Q(next_state, next_actions)
-        targets=np.array([r+self.gamma*q if not done else r for r, q, done in zip(reward,q_next,dones)])
+        targets=np.array([r+self.FLAGS.gamma*q if not done else r for r, q, done in zip(reward,q_next,dones)])
         self.critic.train(state, targets, action)
         
         #Train actor network
@@ -275,7 +315,9 @@ class Model:
         
 
     def playEpisode(self,episode):
+        '''Play an episode in the environment '''
         
+        #get initial state from the environment
         state=self.env.reset()
         state=state.reshape(1,self.state_size)
         done=False
@@ -283,21 +325,27 @@ class Model:
    
         while not done:
 
+            #get action for an environment state
             action=self.actor.get_action(state)+self.action_noise.get_noise(episode)
             prev_state=state
+            # get new-state, reward, done tuple
             state, reward, done, _ = self.env.step(action)
             state=state.reshape(1,self.state_size)
             
             #self.env.render(mode='rgb_array')
             total_reward=total_reward+reward
 
+            # add <state, action, reward, next-state, done > tuple into the experience replay
             self.exp_replay.addExperience(prev_state, action, reward, state, done)
+            
+            # start the training
             self.train_networks()
             
         return total_reward
             
 
     def run_model(self):
+        '''Main loop. Runs the environment and traing the networks '''
         
         totalrewards = np.empty(self.num_episodes+1)
         n_steps=10
@@ -321,7 +369,7 @@ tf.app.flags.DEFINE_float('gamma', 0.99, 'Future discount factor')
 
 tf.app.flags.DEFINE_integer('batch_size', 64, 'Batch size')
 
-tf.app.flags.DEFINE_integer('tau', 1e-2, 'Update rate for the target networks parameter')
+tf.app.flags.DEFINE_float('tau', 1e-2, 'Update rate for the target networks parameter')
 
 FLAGS = tf.app.flags.FLAGS
 
